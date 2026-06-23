@@ -110,39 +110,38 @@
             z-index: 10;
         }
 
+        /* Contador de Tiempo */
+        .timer-box {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #ff477e;
+            background-color: #fff0f3;
+            padding: 10px 30px;
+            border-radius: 20px;
+            border: 2px dashed #ff758c;
+            margin: 20px 0;
+            min-width: 150px;
+        }
+
         /* Pantalla de Victoria Final */
         .hidden {
             display: none !important;
-        }
-
-        .victory-animation {
-            font-size: 4rem;
-            animation: bounce 0.6s infinite alternate;
-            margin-top: 15px;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-15px); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Tarjeta Principal -->
     <div class="card-container" id="mainCard">
-        <h1>¡LLEGAAAARON LAS PIPSHAS! 🍕🎉</h1>
-        <p>Hoy es un día especial y quería recordártelo con este temazo de meme.</p>
+        <h1>FELIZ CUMPLEAÑOS PIPSHITA!!! 🍕🎉</h1>
+        <p>Perdón por no hacer de tu cumpleaños un ideal especial, por favor dame la oportunidad de tratar de enmendar asi sea un poco este error</p>
         
-        <!-- Zona del Meme -->
         <div class="meme-container">
-            <!-- El video empieza muteado por reglas de iPhone, pero se desmutea al primer toque -->
             <video id="memeVideo" autoplay loop muted playsinline>
                 <source src="meme.mp4" type="video/mp4">
             </video>
         </div>
 
-        <p style="font-weight: bold; color: #ff477e;">¿Me darías un abrazo de cumpleaños? 🥺</p>
+        <p style="font-weight: bold; color: #ff477e;">¿Me dejas darte un abrazo fuerte de minimo 120 segundos de cumpleaños? 🥺</p>
 
         <div class="buttons-container">
             <button class="btn" id="btnSi">¡SÍ! 💕</button>
@@ -150,14 +149,14 @@
         </div>
     </div>
 
-    <!-- Tarjeta de Agradecimiento -->
     <div class="card-container hidden" id="victoryCard">
-        <h1>¡SABÍA QUE DIRÍAS QUE SÍ! 🥰</h1>
-        <p>Prepárate porque cuando te vea te voy a dar el abrazo más fuerte del mundo. ¡Feliz Cumpleaños! Que pases un día increíble. 💖✨</p>
-        <div class="victory-animation">🎉🎂🍕</div>
+        <h1>Sabía que no podrías negarte 🥰</h1>
+        
+        <div class="timer-box" id="countdown">120</div>
+        
+        <p id="victorySubtext" style="font-weight: bold; color: #ff477e; margin-top: 10px;"></p>
     </div>
 
-    <!-- Librería externa para lanzar confeti al final -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <script>
@@ -166,6 +165,8 @@
         const mainCard = document.getElementById('mainCard');
         const victoryCard = document.getElementById('victoryCard');
         const video = document.getElementById('memeVideo');
+        const countdownDisplay = document.getElementById('countdown');
+        const victorySubtext = document.getElementById('victorySubtext');
 
         // Apple bloquea los videos con sonido automático.
         // Al primer toque que dé el usuario en cualquier lado del iPhone, el video se desmuteará solo.
@@ -207,7 +208,23 @@
                 btnNo.remove();
             }
 
-            // Lluvia de confeti
+            // --- Lógica del Contador de 120 segundos ---
+            let timeLeft = 120;
+            const interval = setInterval(() => {
+                timeLeft--;
+                countdownDisplay.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    countdownDisplay.textContent = "✨";
+                    victorySubtext.textContent = "¡Tiempo completado! Te quiero muchísimo. 🥰🏆";
+                    
+                    // Confeti extra al terminar el abrazo
+                    confetti({ particleCount: 150, spread: 80 });
+                }
+            }, 1000);
+
+            // Lluvia de confeti inicial por 5 segundos
             var duration = 5 * 1000;
             var end = Date.now() + duration;
 
