@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¡Sorpresa de Cumpleaños!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Quita el flash azul al tocar en iPhone */
+        }
+        body {
+            background-color: #ffe5ec; /* Fondo rosa claro */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Contenedor Principal */
+        .card-container {
+            width: 100%;
+            max-width: 360px; /* Tamaño ideal para iPhone */
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 117, 140, 0.2);
+            border: 3px solid #ffb3c6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: #ff477e;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #4a4a4a;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* Contenedor del Meme (Video) */
+        .meme-container {
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background-color: #f0f0f0;
+            aspect-ratio: 4/3; /* Mantiene la proporción del video */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .meme-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Botones del Juego */
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+            position: relative;
+            height: 60px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.1s ease, background-color 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #btnSi {
+            background-color: #ff477e;
+            color: white;
+        }
+
+        #btnSi:active {
+            transform: scale(0.95);
+        }
+
+        #btnNo {
+            background-color: #eaeaea;
+            color: #555;
+            position: absolute; /* Permite que escape por la pantalla */
+            z-index: 10;
+        }
+
+        /* Pantalla de Victoria Final */
+        .hidden {
+            display: none !important;
+        }
+
+        .victory-animation {
+            font-size: 4rem;
+            animation: bounce 0.6s infinite alternate;
+            margin-top: 15px;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tarjeta Principal -->
+    <div class="card-container" id="mainCard">
+        <h1>¡LLEGAAAARON LAS PIPSHAS! 🍕🎉</h1>
+        <p>Hoy es un día especial y quería recordártelo con este temazo de meme.</p>
+        
+        <!-- Zona del Meme -->
+        <div class="meme-container">
+            <!-- El video empieza muteado por reglas de iPhone, pero se desmutea al primer toque -->
+            <video id="memeVideo" autoplay loop muted playsinline>
+                <source src="meme.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <p style="font-weight: bold; color: #ff477e;">¿Me darías un abrazo de cumpleaños? 🥺</p>
+
+        <div class="buttons-container">
+            <button class="btn" id="btnSi">¡SÍ! 💕</button>
+            <button class="btn" id="btnNo">No 😢</button>
+        </div>
+    </div>
+
+    <!-- Tarjeta de Agradecimiento -->
+    <div class="card-container hidden" id="victoryCard">
+        <h1>¡SABÍA QUE DIRÍAS QUE SÍ! 🥰</h1>
+        <p>Prepárate porque cuando te vea te voy a dar el abrazo más fuerte del mundo. ¡Feliz Cumpleaños! Que pases un día increíble. 💖✨</p>
+        <div class="victory-animation">🎉🎂🍕</div>
+    </div>
+
+    <!-- Librería externa para lanzar confeti al final -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        const btnSi = document.getElementById('btnSi');
+        const btnNo = document.getElementById('btnNo');
+        const mainCard = document.getElementById('mainCard');
+        const victoryCard = document.getElementById('victoryCard');
+        const video = document.getElementById('memeVideo');
+
+        // Apple bloquea los videos con sonido automático.
+        // Al primer toque que dé el usuario en cualquier lado del iPhone, el video se desmuteará solo.
+        document.body.addEventListener('click', () => {
+            if (video) {
+                video.muted = false; 
+                video.play().catch(e => console.log("Video esperando reproducción"));
+            }
+        }, { once: true });
+
+        // Función para mover el botón NO de forma loca por la pantalla
+        function moverBotonNo() {
+            const padding = 40;
+            const xMax = window.innerWidth - btnNo.offsetWidth - padding;
+            const yMax = window.innerHeight - btnNo.offsetHeight - padding;
+
+            const randomX = Math.floor(Math.random() * (xMax - padding)) + padding;
+            const randomY = Math.floor(Math.random() * (yMax - padding)) + padding;
+
+            document.body.appendChild(btnNo);
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+        }
+
+        // En pantallas táctiles de iPhone 'touchstart' detecta el dedo antes de que logren pulsar
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            moverBotonNo();
+        });
+        
+        btnNo.addEventListener('mouseover', moverBotonNo);
+
+        // Cuando presionan SÍ
+        btnSi.addEventListener('click', () => {
+            mainCard.classList.add('hidden');
+            victoryCard.classList.remove('hidden');
+            
+            if(document.body.contains(btnNo)) {
+                btnNo.remove();
+            }
+
+            // Lluvia de confeti
+            var duration = 5 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        });
+    </script>
+</body>
+</html>
