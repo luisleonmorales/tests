@@ -133,7 +133,7 @@
 
     <div class="card-container" id="mainCard">
         <h1>FELIZ CUMPLEAÑOS PIPSHITA!!! 🍕🎉</h1>
-        <p>Perdón por no hacer de tu cumpleaños un ideal especial, por favor dame la oportunidad de tratar de enmendar asi sea un poco este error</p>
+        <p>Perdón por no hacer de tu cumpleaños un dia especial, por favor dame la oportunidad de tratar de enmendar asi sea un poco este error</p>
         
         <div class="meme-container">
             <video id="memeVideo" autoplay loop muted playsinline>
@@ -141,7 +141,7 @@
             </video>
         </div>
 
-        <p style="font-weight: bold; color: #ff477e;">¿Me dejas darte un abrazo fuerte de minimo 120 segundos de cumpleaños? 🥺</p>
+        <p style="font-weight: bold; color: #ff477e;">¿Me dejas darte un abrazo fuerte de minimo 60 segundos de cumpleaños? 🥺</p>
 
         <div class="buttons-container">
             <button class="btn" id="btnSi">¡SÍ! 💕</button>
@@ -209,7 +209,7 @@
             }
 
             // --- Lógica del Contador de 120 segundos ---
-            let timeLeft = 120;
+            let timeLeft = 60;
             const interval = setInterval(() => {
                 timeLeft--;
                 countdownDisplay.textContent = timeLeft;
@@ -217,7 +217,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(interval);
                     countdownDisplay.textContent = "✨";
-                    victorySubtext.textContent = "¡Tiempo completado! Te quiero muchísimo. 🥰🏆";
+                    victorySubtext.textContent = "Te quiero mucho ❤️‍🩹";
                     
                     // Confeti extra al terminar el abrazo
                     confetti({ particleCount: 150, spread: 80 });
